@@ -39,6 +39,103 @@ void setup()
 	}
 }
 
+void updateModifiers(VirtualKey virtualKey, bool keyDown, uint8_t* modifiers)
+{
+    switch (virtualKey)
+    {
+        case VK_LCTRL:
+            if (keyDown)
+            {
+                report.modifiers |= 0x01;
+            }
+            else
+            {
+                report.modifiers &= ~0x01; 
+            }
+            break;
+        
+        case VK_LSHIFT:
+            if (keyDown)
+            {
+                report.modifiers |= 0x02;
+            }
+            else
+            {
+                report.modifiers &= ~0x02; 
+            }
+            break;
+        
+        case VK_LALT:
+            if (keyDown)
+            {
+                report.modifiers |= 0x04;
+            }
+            else
+            {
+                report.modifiers &= ~0x04; 
+            }
+            break;
+        
+        case VK_LGUI:
+            if (keyDown)
+            {
+                report.modifiers |= 0x08;
+            }
+            else
+            {
+                report.modifiers &= ~0x08; 
+            }
+            break;
+        
+        case VK_RCTRL:
+            if (keyDown)
+            {
+                report.modifiers |= 0x10;
+            }
+            else
+            {
+                report.modifiers &= ~0x10; 
+            }
+            break;
+        
+        case VK_RSHIFT:
+            if (keyDown)
+            {
+                report.modifiers |= 0x20;
+            }
+            else
+            {
+                report.modifiers &= ~0x20; 
+            }
+            break;
+        
+        case VK_RALT:
+            if (keyDown)
+            {
+                report.modifiers |= 0x40;
+            }
+            else
+            {
+                report.modifiers &= ~0x40; 
+            }
+            break;
+        
+        case VK_RGUI:
+            if (keyDown)
+            {
+                report.modifiers |= 0x80;
+            }
+            else
+            {
+                report.modifiers &= ~0x80; 
+            }
+            break;
+        
+        default:
+            break;
+    }
+}
+
 void loop() 
 {
     if (connected) 
@@ -70,19 +167,9 @@ void loop()
 
     bool keyDown;
     VirtualKey virtualKey = keyboard->getNextVirtualKey(&keyDown);
-
-    report.modifiers = 
-        keyboard->isVKDown(VK_LCTRL)  ? 0x01 : 0 |
-        keyboard->isVKDown(VK_LSHIFT) ? 0x02 : 0 |
-        keyboard->isVKDown(VK_LALT)   ? 0x04 : 0 |
-        keyboard->isVKDown(VK_LGUI)   ? 0x08 : 0 |
-        keyboard->isVKDown(VK_RCTRL)  ? 0x10 : 0 |
-        keyboard->isVKDown(VK_RSHIFT) ? 0x20 : 0 |
-        keyboard->isVKDown(VK_RALT)   ? 0x40 : 0 |
-        keyboard->isVKDown(VK_RGUI)   ? 0x80 : 0;
+    updateModifiers(virtualKey, keyDown, &report.modifiers);
 
     uint8_t keyCode = convertToKeyCode(virtualKey);
-
     if (keyCode > 0)
     {
         if (keyDown)
@@ -116,6 +203,21 @@ void loop()
     }
 
     bleKeyboard.sendReport(&report);
+
+/*
+    char buffer[200];
+    const char *bit_rep[16] = {
+        [ 0] = "0000", [ 1] = "0001", [ 2] = "0010", [ 3] = "0011",
+        [ 4] = "0100", [ 5] = "0101", [ 6] = "0110", [ 7] = "0111",
+        [ 8] = "1000", [ 9] = "1001", [10] = "1010", [11] = "1011",
+        [12] = "1100", [13] = "1101", [14] = "1110", [15] = "1111",
+    };
+    sprintf(buffer, "%s%s %02x %02x %02x %02x %02x %02x", 
+        bit_rep[report.modifiers >> 4], bit_rep[report.modifiers & 0x0F],
+        report.keys[0], report.keys[1], report.keys[2],
+        report.keys[3], report.keys[4], report.keys[5]);
+    Serial.println(buffer);
+*/
 }
 
 uint8_t convertToKeyCode(VirtualKey virtualKey)
