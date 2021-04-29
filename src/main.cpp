@@ -286,7 +286,6 @@ uint8_t convertToKeyCode(VirtualKey virtualKey)
             return 0x3A + (virtualKey - VK_F1);
 
         case VK_SYSREQ:
-        case VK_PRINTSCREEN2:
             return 0x46;
         case VK_SCROLLLOCK:
             return 0x47;
