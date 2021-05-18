@@ -39,7 +39,7 @@ void setup()
 	}
 }
 
-void updateModifiers(VirtualKey virtualKey, bool keyDown, uint8_t* modifiers)
+static void updateModifiers(VirtualKey virtualKey, bool keyDown)
 {
     switch (virtualKey)
     {
@@ -167,7 +167,7 @@ void loop()
 
     bool keyDown;
     VirtualKey virtualKey = keyboard->getNextVirtualKey(&keyDown);
-    updateModifiers(virtualKey, keyDown, &report.modifiers);
+    updateModifiers(virtualKey, keyDown);
 
     uint8_t keyCode = convertToKeyCode(virtualKey);
     if (keyCode > 0)
