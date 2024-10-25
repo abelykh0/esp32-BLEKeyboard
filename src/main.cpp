@@ -7,7 +7,7 @@
 using namespace fabgl;
 
 static bool connected = false;
-static BleKeyboard bleKeyboard;
+static BleKeyboard bleKeyboard("ESP32 Keyboard", "Espressif", 100);
 static PS2Controller ps2Controller;
 static Keyboard* keyboard;
 
