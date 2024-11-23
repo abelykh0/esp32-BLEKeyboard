@@ -254,6 +254,9 @@ uint8_t convertToKeyCode(VirtualKey virtualKey)
         case VK_MINUS:
         case VK_UNDERSCORE:
             return 0x2D;
+        case VK_PLUS:
+        case VK_EQUALS:
+            return 0x2E;
         case VK_LEFTBRACE:
         case VK_LEFTBRACKET:
             return 0x2F;
